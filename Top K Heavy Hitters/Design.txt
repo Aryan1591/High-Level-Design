@@ -1,0 +1,52 @@
+Functional Requirements : 
+
+1 -> Users should be able to Query top k Songs (k can be till 1000 atmax )
+2 -> Able to accept a parameter which is the time period which we are gonna server (minute , hour, day, all-time)
+3 -> Able to support any window (Sliding Window)
+4 -> Wont support arbitrary starting points (say we are on june , can we know about data for April : NO)
+
+
+Non - Functional Requirements : 
+
+1 -> Whats the amount of time that a view is done should get reflected in our calculation (<= 60s)
+2 -> Low Latency (We want to show this count as soon as possible 10-100ms)
+3 -> System should be able to handle massive amount of views 
+4 -> System should be able to handle massive amount of songs 
+5 -> No Approximation support (If we are gonna support for Approximation , we can use some data structures such as Bloom Filters, Count-min etc)
+     So we want perfect count 
+6 -> Highly Available     
+
+
+Entities involved : 
+
+1 -> View
+2 -> Song 
+3 -> Window (Minute / Hour / Day / All-Time)
+
+API's exposed 
+POST /api/v1/songs/{songId}/views
+// Records a view event
+
+GET /api/v1/analytics/songs?K={k}&Window={window}
+// Returns top videos by view count
+Response: {
+  "data": [
+    {"songId": "abc123", "viewCount": 1500},
+    {"songId": "def456", "viewCount": 1200}
+  ],
+  "meta": {
+    "limit": 10, - corresponds to k
+    "timeframe": "24h", - corresponds to window 
+    "totalVideos": 50
+  }
+}
+
+Scaling Req  :
+Assume 
+There are 10 billion song plays per day.
+There are 100 millions of songs.
+The top K songs API is accessed 1 million times per day.
+
+
+
+
